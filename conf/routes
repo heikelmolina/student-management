@@ -1,10 +1,9 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
-# ~~~~
+#Routes for the Course Object
+GET  /allcourses  controllers.CourseController.allcourses
+GET  /findcoursebyid/:id  controllers.CourseController.findcoursebyid(id: Long)
+POST  /createcourse controllers.CourseController.createcourse
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+#Routes for the Student Object
+#GET  /allstudents  controllers.StudentController.allstudents
+#GET  /findstudentbydocument/:document  controllers.StudentController.findstudentbydocument(document: Long)
+#POST  /createstudent controllers.StudentController.createstudent
