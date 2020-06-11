@@ -2,9 +2,11 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Student (
-                   document: Long,
+case class Student(document: Long,
                    name: String,
-                   last_name: String,
-                   courses: Set[Course]
-                   )
+                   lastName: String,
+                   courses: Set[Course])
+
+object Student {
+  implicit val studentFormat = Json.format[Student]
+}
