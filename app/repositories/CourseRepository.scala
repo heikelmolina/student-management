@@ -14,7 +14,6 @@ import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json._
 import collection._
 import reactivemongo.api.Cursor
-import reactivemongo.api.commands.WriteResult
 
 class CourseRepository @Inject()(val components: ControllerComponents,
                                  val reactiveMongoApi: ReactiveMongoApi)
@@ -27,18 +26,18 @@ class CourseRepository @Inject()(val components: ControllerComponents,
   def collection: Future[JSONCollection] =
     database.map(_.collection[JSONCollection]("courses"))
 
+  def create(course: Course) =
+    collection.flatMap(_.insert.one(course))
+
   def find() = {
     val cursor: Future[Cursor[Course]] = collection.map {
       _.find(BSONDocument()).cursor[Course]()
     }
 
-    val futureUsersList: Future[List[Course]] =
+    val futureCoursesList =
       cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
-    futureUsersList
+    futureCoursesList
   }
-
-  def create(course: Course): Future[WriteResult] =
-    collection.flatMap(_.insert.one(course))
 
   def findId(id: Long) = {
     val cursor: Future[Cursor[Course]] = collection.map {

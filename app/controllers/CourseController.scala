@@ -16,12 +16,6 @@ class CourseController @Inject()(val components: ControllerComponents,
 
   implicit def ec: ExecutionContext = components.executionContext
 
-  def allCourses() = Action.async {
-    courseRepository.find().map { courses =>
-      Ok(Json.toJson(courses))
-    }
-  }
-
   def createCourse = Action.async(parse.json) {
     _.body
       .validate[Course]
@@ -31,6 +25,12 @@ class CourseController @Inject()(val components: ControllerComponents,
         }
       }
       .getOrElse(Future.successful(BadRequest("Invalid format")))
+  }
+
+  def allCourses() = Action.async {
+    courseRepository.find().map { courses =>
+      Ok(Json.toJson(courses))
+    }
   }
 
   def findCourseById(id: Long) = Action.async {
