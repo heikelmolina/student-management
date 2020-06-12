@@ -4,6 +4,6 @@ GET             /findcoursebyid/:id                     controllers.CourseContro
 POST            /createcourse                           controllers.CourseController.createCourse
 
 #Routes for the Student Object
-#GET            /allstudents                            controllers.StudentController.allStudents
-#GET            /findstudentbydocument/:document        controllers.StudentController.findStudentByDocument(document: Long)
-#POST           /createstudent                          controllers.StudentController.createStudent
+GET             /allstudents                            controllers.StudentController.allStudents
+GET             /findstudentbydocument/:document        controllers.StudentController.findStudentByDocument(document: Long)
+POST            /createstudent                          controllers.StudentController.createStudent

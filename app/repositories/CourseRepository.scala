@@ -44,8 +44,8 @@ class CourseRepository @Inject()(val components: ControllerComponents,
       _.find(Json.obj("_id" -> id)).cursor[Course]()
     }
 
-    val futureUsersList: Future[List[Course]] =
+    val futureCoursesList: Future[List[Course]] =
       cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
-    futureUsersList
+    futureCoursesList
   }
 }
