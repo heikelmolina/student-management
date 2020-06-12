@@ -26,7 +26,7 @@ To test the Api locally you must set up a local database,
 
 ### Where to test it?
 
-You can test it on https://scala-student-management.herokuapp.com/
+You can test it on https://scala-student-managment.herokuapp.com/
 
 Remember to append the endpoint route to the API url access.
 
