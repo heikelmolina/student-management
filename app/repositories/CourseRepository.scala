@@ -29,6 +29,9 @@ class CourseRepository @Inject()(val components: ControllerComponents,
   def create(course: Course) =
     collection.flatMap(_.insert.one(course))
 
+  def createAll(courses: List[Course]) =
+    collection.flatMap(_.insert.many(courses))
+
   def find() = {
     val cursor: Future[Cursor[Course]] = collection.map {
       _.find(BSONDocument()).cursor[Course]()
@@ -48,4 +51,43 @@ class CourseRepository @Inject()(val components: ControllerComponents,
       cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
     futureCoursesList
   }
+
+  //practicing..
+
+  abstract class findSomething
+
+  case class afind() extends findSomething
+
+  case class afindById(id: Long) extends findSomething
+
+  def find3(find: findSomething) = {
+    find match {
+      case afind() =>
+        val cursor: Future[Cursor[Course]] = collection.map {
+          _.find(BSONDocument()).cursor[Course]()
+        }
+
+        val futureCoursesList =
+          cursor.flatMap(
+            _.collect[List](-1, Cursor.FailOnError[List[Course]]())
+          )
+        futureCoursesList
+
+      case afindById(id) =>
+        val cursor: Future[Cursor[Course]] = collection.map {
+          _.find(Json.obj("_id" -> id)).cursor[Course]()
+        }
+
+        val futureCoursesList =
+          cursor.flatMap(
+            _.collect[List](-1, Cursor.FailOnError[List[Course]]())
+          )
+        futureCoursesList
+    }
+  }
+
+  println(find3(afind()))
+  println(find3(afindById(3)))
+
+  //end of practicing
 }

@@ -16,7 +16,8 @@ import collection._
 import reactivemongo.api.Cursor
 
 class StudentRepository @Inject()(val components: ControllerComponents,
-                                  val reactiveMongoApi: ReactiveMongoApi)
+                                  val reactiveMongoApi: ReactiveMongoApi,
+                                  val courseRepository: CourseRepository)
     extends AbstractController(components)
     with MongoController
     with ReactiveMongoComponents {
@@ -26,8 +27,10 @@ class StudentRepository @Inject()(val components: ControllerComponents,
   def collection: Future[JSONCollection] =
     database.map(_.collection[JSONCollection]("students"))
 
-  def create(student: Student) =
+  def create(student: Student) = {
     collection.flatMap(_.insert.one(student))
+    courseRepository.createAll(student.courses)
+  }
 
   def find() = {
     val cursor: Future[Cursor[Student]] = collection.map {
