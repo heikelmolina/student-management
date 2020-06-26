@@ -44,7 +44,7 @@ def someFunction(a: Int, b: Int, c: Int, f: (Int, Int) => Int): Int = {
 
 //first way +++
 println(someFunction(1, 2, 3, (x, y) => x + y))
-//another wayn ---
+//another way ---
 println(someFunction(1, 2, 3, _ + _))
 
 
