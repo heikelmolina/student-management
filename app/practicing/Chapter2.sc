@@ -106,8 +106,36 @@ def curry[A,B,C](f: (A, B) => C): A => B => C = {
 
 //Exercise 2.4
 def uncurry[A,B,C](f: A => B => C): (A, B) => C = {
-  (a, b) => f(a), f(b)
+  (a, b) => f(a)(b)
 }
+
+def f(x: Int, y: Int): Int = {
+  x + y
+}
+
+def g(x: Int)(y: Int)={
+  x + y
+}
+
+val pepe: Int => Int => Int = curry(f)
+val pepe1: Int => Int = pepe(1)
+val pepe2: Int = pepe1(2)
+pepe
+pepe1
+pepe2
+
+
+
+
+//Exercise 2.4
+def uncurry[A,B,C](f: A => B => C): (A, B) => C = {
+  (a, b) => f(a)(b)
+}
+
+
+curry(f)(1)(1) == f(1, 1)
+curry(f)(1)(1) == g(1)(1)
+
 
 //Exercise 2.5
 def compose[A,B,C](f: B => C, g: A => B): A => C = {
@@ -115,6 +143,18 @@ def compose[A,B,C](f: B => C, g: A => B): A => C = {
   //for better understanding
   //a: A => f(g(a: A): B): C
 }
+
+def sum(a: Int) ={
+  a + 2
+}
+
+def mul(a: Int) ={
+  a * 2
+}
+
+val t: Int => Int = compose(mul, sum)
+
+t(4)
 
 //Las funciones polimorficas y HOF se usan en diferentes contextos sin importar
 //el dominio de la operacion porque se abstraen a un patron comun que se comparte
