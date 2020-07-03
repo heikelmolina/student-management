@@ -33,6 +33,7 @@ class CourseController @Inject()(val components: ControllerComponents,
     }
   }
 
+feature/course
   def findCourseById(id: Long) = Action.async {
     courseRepository.find(Some(id)).map { course =>
       Ok(Json.toJson(course))

@@ -1,7 +1,7 @@
 package repositories
 
 import models.Course
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{
   MongoController,
@@ -9,11 +9,13 @@ import play.modules.reactivemongo.{
   ReactiveMongoComponents
 }
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json._
 import collection._
 import reactivemongo.api.Cursor
+import reactivemongo.api.Cursor.WithOps
 
 class CourseRepository @Inject()(val components: ControllerComponents,
                                  val reactiveMongoApi: ReactiveMongoApi)
