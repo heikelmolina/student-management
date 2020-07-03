@@ -28,13 +28,13 @@ class CourseController @Inject()(val components: ControllerComponents,
   }
 
   def allCourses() = Action.async {
-    courseRepository.find().map { courses =>
+    courseRepository.find(null).map { courses =>
       Ok(Json.toJson(courses))
     }
   }
 
   def findCourseById(id: Long) = Action.async {
-    courseRepository.findId(id).map { course =>
+    courseRepository.find(Some(id)).map { course =>
       Ok(Json.toJson(course))
     }
   }
