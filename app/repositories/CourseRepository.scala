@@ -31,31 +31,8 @@ class CourseRepository @Inject()(val components: ControllerComponents,
   def create(course: Course) =
     collection.flatMap(_.insert.one(course))
 
-  def createAll(courses: List[Course]) =
-    collection.flatMap(_.insert.many(courses))
-
-//  def find() = {
-//    val cursor: Future[Cursor[Course]] = collection.map {
-//      _.find(BSONDocument()).cursor[Course]()
-//    }
-//
-//    val futureCoursesList =
-//      cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
-//    futureCoursesList
-//  }
-//
-//  def findId(id: Long) = {
-//    val cursor: Future[Cursor[Course]] = collection.map {
-//      _.find(Json.obj("_id" -> id)).cursor[Course]()
-//    }
-//
-//    val futureCoursesList: Future[List[Course]] =
-//      cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
-//    futureCoursesList
-//  }
-
   def find(idOpt: Option[Long]) = {
-    val a: Future[WithOps[Course]] = idOpt match {
+    val cursor = idOpt match {
       case Some(x) =>
         collection.map {
           _.find(Json.obj("_id" -> x)).cursor[Course]()
@@ -65,7 +42,6 @@ class CourseRepository @Inject()(val components: ControllerComponents,
           _.find(BSONDocument()).cursor[Course]()
         }
     }
-
-    a.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
+    cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Course]]()))
   }
 }
