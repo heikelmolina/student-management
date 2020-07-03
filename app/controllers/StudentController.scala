@@ -28,13 +28,13 @@ class StudentController @Inject()(val components: ControllerComponents,
   }
 
   def allStudents() = Action.async {
-    studentRepository.find().map { student =>
+    studentRepository.find(null).map { student =>
       Ok(Json.toJson(student))
     }
   }
 
   def findStudentByDocument(document: Long) = Action.async {
-    studentRepository.findId(document).map { student =>
+    studentRepository.find(Some(document)).map { student =>
       Ok(Json.toJson(student))
     }
   }

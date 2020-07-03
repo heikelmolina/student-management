@@ -16,8 +16,7 @@ import collection._
 import reactivemongo.api.Cursor
 
 class StudentRepository @Inject()(val components: ControllerComponents,
-                                  val reactiveMongoApi: ReactiveMongoApi,
-                                  val courseRepository: CourseRepository)
+                                  val reactiveMongoApi: ReactiveMongoApi)
     extends AbstractController(components)
     with MongoController
     with ReactiveMongoComponents {
@@ -25,30 +24,23 @@ class StudentRepository @Inject()(val components: ControllerComponents,
   implicit def ec: ExecutionContext = components.executionContext
 
   def collection: Future[JSONCollection] =
-    database.map(_.collection[JSONCollection]("students"))
+    database.map(_.collection[JSONCollection]("student-managment"))
 
   def create(student: Student) = {
     collection.flatMap(_.insert.one(student))
-    courseRepository.createAll(student.courses)
   }
 
-  def find() = {
-    val cursor: Future[Cursor[Student]] = collection.map {
-      _.find(BSONDocument()).cursor[Student]()
+  def find(document: Option[Long]) = {
+    val cursor = document match {
+      case Some(x) =>
+        collection.map {
+          _.find(Json.obj("document" -> x)).cursor[Student]()
+        }
+      case _ =>
+        collection.map {
+          _.find(BSONDocument()).cursor[Student]()
+        }
     }
-
-    val futureStudentsList =
-      cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Student]]()))
-    futureStudentsList
-  }
-
-  def findId(document: Long) = {
-    val cursor: Future[Cursor[Student]] = collection.map {
-      _.find(Json.obj("document" -> document)).cursor[Student]()
-    }
-
-    val futureStudentsList: Future[List[Student]] =
-      cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Student]]()))
-    futureStudentsList
+    cursor.flatMap(_.collect[List](-1, Cursor.FailOnError[List[Student]]()))
   }
 }
