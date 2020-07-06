@@ -26,7 +26,7 @@ class CourseRepository @Inject()(val components: ControllerComponents,
   implicit def ec: ExecutionContext = components.executionContext
 
   def collection: Future[JSONCollection] =
-    database.map(_.collection[JSONCollection]("courses"))
+    database.map(_.collection[JSONCollection]("student-managment"))
 
   def create(course: Course) =
     collection.flatMap(_.insert.one(course))
