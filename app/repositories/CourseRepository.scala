@@ -1,7 +1,7 @@
 package repositories
 
 import models.Course
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{
   MongoController,
@@ -15,7 +15,6 @@ import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json._
 import collection._
 import reactivemongo.api.Cursor
-import reactivemongo.api.Cursor.WithOps
 
 class CourseRepository @Inject()(val components: ControllerComponents,
                                  val reactiveMongoApi: ReactiveMongoApi)
@@ -26,10 +25,13 @@ class CourseRepository @Inject()(val components: ControllerComponents,
   implicit def ec: ExecutionContext = components.executionContext
 
   def collection: Future[JSONCollection] =
-    database.map(_.collection[JSONCollection]("student-managment"))
+    database.map(_.collection[JSONCollection]("student-management"))
 
   def create(course: Course) =
     collection.flatMap(_.insert.one(course))
+
+  def createAll(courses: List[Course]) =
+    collection.flatMap(_.insert.many(courses))
 
   def find(idOpt: Option[Long]) = {
     val cursor = idOpt match {
